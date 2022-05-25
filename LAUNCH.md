@@ -5,12 +5,15 @@ The following document describes the necessary steps involved that a validator m
 ## Timeline (Expected)
 
 * Fri May 26 2022 09:00:00 GMT+0000 (UTC)
+
     Share `preultimate-genesis.json` and start to collect gen_txs from the validators.
 
 * Fri May 28 2022 03:00:00 GMT+0000 (UTC)
+
     Finish collecting gen_txs and build & share `genesis.json`
 
 * Fri May 28 2022 06:00:00 GMT+0000 (UTC)
+
     Launch network
 
 ## Snapshot
@@ -72,7 +75,14 @@ mv ./pre-attack-snapshot.json ./post-attack-snapshot.json ./genesis-tools
 
 3. Run genesis builder script
 ```sh
-python3 ./genesis-builder.py ./genesis-template.json ./pre-attack-snapshot.json ./post-attack-snapshot.json ./genesis-validators.json --genesis-time=2022-05-28T06:00:00.000000Z --pretty=false --chain-id=pisco-1 > penultimate-genesis.json
+python3 ./genesis-builder.py \
+    ./genesis-template.json \
+    ./pre-attack-snapshot.json \
+    ./post-attack-snapshot.json \
+    ./genesis-validators.json \
+    --genesis-time=2022-05-28T06:00:00.000000Z \
+    --pretty=false --chain-id=pisco-1 \
+    > penultimate-genesis.json
 ```
 
 4. Verify the SHA256 of the (sorted) penultimate-genesis.json
