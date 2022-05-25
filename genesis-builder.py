@@ -68,8 +68,9 @@ class Balance(TypedDict):
 
 Balances = List[Balance]
 VestingScheduleMap = Dict[str, List[VestingSchedule]]
+AddressMap = Dict[str, bool]
 
-BLACK_LIST = {
+BLACK_LIST: AddressMap = {
     'terra17xpfvakm2amg962yls6f84z3kell8c5lkaeqfa': True,  # fee collector
     'terra10d07y265gmmuvt4z0w9aw880jnsr700juxf95n': True,  # gov
     'terra1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8pm7utl': True,  # distribution
@@ -81,6 +82,10 @@ BLACK_LIST = {
     'terra1yl6hdjhmkf37639730gffanpzndzdpmhgmvf4r': True,  # ibc transfer
     'terra1m3h30wlvsf8llruxtpukdvsy0km2kum8w4ac9q': True,  # mint
     'terra1dp0taj85ruc299rkdvzp4z5pfg6z6swaed74e6': True,  # foundation
+    'terra1gr0xesnseevzt3h4nxr64sh5gk4dwrwgszx3nw': True,  # LFG
+    'terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc': True,  # Shuttle ETH
+    'terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2': True,  # Shuttle BSC
+    'terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk': True,  # Shuttle HMY
 }
 
 # community pool: 30%
@@ -228,7 +233,11 @@ def merge_vesting_schedules(schedules: List[VestingSchedule]) -> Tuple[int, int,
     return [str(total_amount), str(vesting_amount), str(start_time), periods]
 
 
-def process_pre_attack_snapshot(pre_attack_snapshot: GenesisDoc, vesting_schedule_map: VestingScheduleMap) -> int:
+def process_pre_attack_snapshot(
+        pre_attack_snapshot: GenesisDoc,
+        vesting_schedule_map: VestingScheduleMap,
+        contract_address_map: AddressMap,
+) -> int:
     allocation_luna = PRE_ATTACK_LUNA
     allocation_aust = PRE_ATTACK_AUST
 
@@ -240,7 +249,7 @@ def process_pre_attack_snapshot(pre_attack_snapshot: GenesisDoc, vesting_schedul
     aust_holders: Dict[str, int] = {}
     for balance in balances:
         # filter out blacklist
-        if balance['address'] in BLACK_LIST:
+        if balance['address'] in BLACK_LIST or balance['address'] in contract_address_map:
             continue
 
         for coin in balance['coins']:
@@ -316,7 +325,11 @@ def process_pre_attack_snapshot(pre_attack_snapshot: GenesisDoc, vesting_schedul
     return total_allocation_amount
 
 
-def process_post_attack_snapshot(post_attack_snapshot: GenesisDoc, vesting_schedule_map: VestingScheduleMap) -> int:
+def process_post_attack_snapshot(
+        post_attack_snapshot: GenesisDoc,
+        vesting_schedule_map: VestingScheduleMap,
+        contract_address_map: AddressMap,
+) -> int:
     allocation_luna = POST_ATTACK_LUNA
     allocation_ust = POST_ATTACK_UST
 
@@ -328,7 +341,7 @@ def process_post_attack_snapshot(post_attack_snapshot: GenesisDoc, vesting_sched
     ust_holders: Dict[str, int] = {}
     for balance in balances:
         # filter out blacklist
-        if balance['address'] in BLACK_LIST:
+        if balance['address'] in BLACK_LIST or balance['address'] in contract_address_map:
             continue
 
         for coin in balance['coins']:
@@ -458,7 +471,8 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     }
 
     # IBC: restrict allowed client
-    genesis['app_state']['ibc']['client_genesis']['params']['allowed_clients'] = ['07-tendermint']
+    genesis['app_state']['ibc']['client_genesis']['params']['allowed_clients'] = [
+        '07-tendermint']
 
     # Auth: clear accounts
     genesis['app_state']['auth']['accounts'] = []
@@ -469,16 +483,27 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     # Genutil: clear gen_txs
     genesis['app_state']['genutil']['gen_txs'] = []
 
+    # Wasm: build contract address map to exclude from snapshot
+    contract_address_map = build_contract_address_map(genesis=genesis)
+
     # Vesting Account Registration with snapshots
     vesting_schedule_map: VestingScheduleMap = {}
 
-    pre_attack_snapshot: GenesisDoc = json.loads(parsed_args.pre_attack_snapshot.read())
+    pre_attack_snapshot: GenesisDoc = json.loads(
+        parsed_args.pre_attack_snapshot.read())
     pre_attack_allocation = process_pre_attack_snapshot(
-        pre_attack_snapshot=pre_attack_snapshot, vesting_schedule_map=vesting_schedule_map)
+        pre_attack_snapshot=pre_attack_snapshot,
+        vesting_schedule_map=vesting_schedule_map,
+        contract_address_map=contract_address_map,
+    )
 
-    post_attack_snapshot: GenesisDoc = json.loads(parsed_args.post_attack_snapshot.read())
+    post_attack_snapshot: GenesisDoc = json.loads(
+        parsed_args.post_attack_snapshot.read())
     post_attack_allocation = process_post_attack_snapshot(
-        post_attack_snapshot=post_attack_snapshot, vesting_schedule_map=vesting_schedule_map)
+        post_attack_snapshot=post_attack_snapshot,
+        vesting_schedule_map=vesting_schedule_map,
+        contract_address_map=contract_address_map,
+    )
 
     for address, schedules in vesting_schedule_map.items():
         [total_amount, vesting_amount, start_time,
@@ -517,6 +542,13 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         str(community_pool_allocation), [])
 
     return genesis
+
+
+def build_contract_address_map(genesis: GenesisDoc) -> AddressMap:
+    contract_address_map: AddressMap = {}
+    for _, contract in genesis['app_state']['wasm']['contracts']:
+        contract_address_map[contract['contract_info']['address']] = True
+    return contract_address_map
 
 
 def add_normal_account(
@@ -655,7 +687,7 @@ def add_periodic_vesting_account(
     start_time: str,
     vesting_periods: List[VestingPeriod],
 ):
-    
+
     def take_length(v: VestingPeriod) -> int:
         return int(v['length'])
     end_time = str(int(start_time) + sum(map(take_length, vesting_periods)))
