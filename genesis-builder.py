@@ -6,7 +6,7 @@ from functools import reduce
 
 DENOM_LUNA = 'uluna'
 DENOM_UST = 'uusd'
-DENOM_AUST = 'aust'
+DENOM_AUST = 'aUST'
 
 # Typing Definitions
 

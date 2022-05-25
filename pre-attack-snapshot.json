@@ -171,7 +171,7 @@
               "amount": "10000000000"
             },
             {
-              "denom": "aust",
+              "denom": "aUST",
               "amount": "10000000000"
             }
           ]
@@ -184,7 +184,7 @@
               "amount": "1000000000000"
             },
             {
-              "denom": "aust",
+              "denom": "aUST",
               "amount": "500000000000000"
             }
           ]
@@ -193,7 +193,7 @@
           "address": "terra1auswfkggetjrhe8jxkzngfd26hugz55d64p0z6",
           "coins": [
             {
-              "denom": "aust",
+              "denom": "aUST",
               "amount": "500000000000000"
             }
           ]
@@ -206,7 +206,7 @@
               "amount": "10000000000000"
             },
             {
-              "denom": "aust",
+              "denom": "aUST",
               "amount": "10000000000"
             }
           ]
@@ -219,7 +219,7 @@
               "amount": "100000000"
             },
             {
-              "denom": "aust",
+              "denom": "aUST",
               "amount": "100000"
             }
           ]
