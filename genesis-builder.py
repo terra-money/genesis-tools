@@ -418,13 +418,13 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     # Mint: set mint params
     genesis['app_state']['mint'] = {
         'minter': {
-            'inflation': '0.130000000000000000',
+            'inflation': '0.070000000000000000',
             'annual_provisions': '0.000000000000000000'
         },
         'params': {
             'mint_denom': DENOM_LUNA,
-            'inflation_rate_change': '0.130000000000000000',
-            'inflation_max': '0.200000000000000000',
+            'inflation_rate_change': '0.000000000000000000',
+            'inflation_max': '0.070000000000000000',
             'inflation_min': '0.070000000000000000',
             'goal_bonded': '0.670000000000000000',
             'blocks_per_year': '4360000'
