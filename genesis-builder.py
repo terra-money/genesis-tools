@@ -422,6 +422,9 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         'max_bytes': '1000000'
     }
 
+    # Auth: set max memo characters to 512
+    genesis['app_state']['auth']['params']['max_memo_characters'] = '512'
+
     # Bank: setup supply
     genesis['app_state']['bank']['supply'] = [{
         'denom': DENOM_LUNA,
@@ -453,13 +456,28 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         'amount': '512000000',
     }
 
-    # Gov: change min deposit to 512 LUNA
-    genesis['app_state']['gov']['deposit_params']['min_deposit'] = [
+    # Gov: change min deposit to 512 LUNA and deposit period to 7days
+    genesis['app_state']['gov']['deposit_params'] = [
         {
-            'denom': DENOM_LUNA,
-            'amount': '512000000'
+            'max_deposit_period': '604800s', # 7days
+            'min_deposit': {
+                'denom': DENOM_LUNA,
+                'amount': '512000000'
+            },
         }
     ]
+
+    # Gov: make tally params quorum to 10%
+    genesis['app_state']['gov']['tally_params'] = {
+        'quorum': '0.100000000000000000',
+        'threshold': '0.500000000000000000',
+        'veto_threshold': '0.334000000000000000'
+    }
+
+    # Gov: set voting period 7days
+    genesis['app_state']['gov']['voting_params'] = {
+        'voting_period': '604800s'
+    }
 
     # Slashing: slash window setup
     genesis['app_state']['slashing']['params'] = {
