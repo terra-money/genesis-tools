@@ -4,7 +4,7 @@ The following document describes the necessary steps involved that a validator m
 
 ## Timeline (Expected)
 
-* Fri May 27 2022 18:00:00 GMT+0900 (KST)
+* Fri May 26 2022 18:00:00 GMT+0900 (KST)
 * Fri May 26 2022 09:00:00 GMT+0000 (UTC)
 
     Share `preultimate-genesis.json` and start to collect gen_txs from the validators.
