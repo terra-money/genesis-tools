@@ -563,6 +563,14 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         'amount': str(community_pool_allocation)
     }]
 
+    # Distribution: set community tax to 0
+    genesis['app_state']['distribution']['params'] = {
+        "community_tax": "0.000000000000000000",
+        "base_proposer_reward": "0.010000000000000000",
+        "bonus_proposer_reward": "0.040000000000000000",
+        "withdraw_addr_enabled": True
+      }
+
     # Distribution: module account registration
     add_module_account(
         genesis, 'distribution',
