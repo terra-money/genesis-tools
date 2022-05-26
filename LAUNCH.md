@@ -1,6 +1,6 @@
 ## Instructions
 
-The following document describes the necessary steps involved that a validator must take in order to prepare `pheonix-1`. The Terra team will post an official updated `penultimate-genesis.json` and `genesis.json` file, but it is recommended that validators execute the following instructions in order to verify the resulting genesis file.
+The following document describes the necessary steps involved that a validator must take in order to prepare `phoenix-1`. The Terra team will post an official updated `penultimate-genesis.json` and `genesis.json` file, but it is recommended that validators execute the following instructions in order to verify the resulting genesis file.
 
 ## Timeline (Expected)
 
@@ -127,7 +127,7 @@ mv ./penultimate-genesis.json ~/.terra/genesis.json
 4. Execute GenTx
 ```sh
 terrad gentx [key-name] [amount-to-stake] \
-    --chain-id pheonix-1 \
+    --chain-id phoenix-1 \
     --min-self-delegation=[] \
     --security-contact=[] \
     --moniker=[] \
