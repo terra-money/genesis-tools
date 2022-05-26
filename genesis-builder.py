@@ -453,6 +453,20 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         'amount': str(TOTAL_ALLOCATION),
     }]
 
+    # Bank: set denom meta
+    genesis['app_state']['bank']['denom_metadata'] = [{
+        'description': 'The native staking token of the Terra 2.0',
+        'denom_units': [
+            {'denom': 'uluna', 'exponent': 0, 'aliases': ['microluna']},
+            {'denom': 'mluna', 'exponent': 3, 'aliases': ['milliluna']},
+            {'denom': 'luna', 'exponent': 6, 'aliases': []},
+        ],
+        'base':    'uluna',
+        'display': 'luna',
+        'name':    'LUNA',
+        'symbol':  'LUNA',
+    }]
+
     # Mint: set mint params
     genesis['app_state']['mint'] = {
         'minter': {
@@ -561,8 +575,8 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
 
         # prevent making tiny balance account
         # enforce minimum amount to receive vesting
-        # skip account creation if total_amount < 1 Luna 
-        if total_amount < 1_000_000:
+        # skip account creation if total_amount < 1 Luna
+        if int(total_amount) < 1_000_000:
             del vesting_schedule_map[address]
             continue
 
@@ -595,10 +609,10 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
 
     # Distribution: set community tax to 0
     genesis['app_state']['distribution']['params'] = {
-        "community_tax": "0.000000000000000000",
-        "base_proposer_reward": "0.010000000000000000",
-        "bonus_proposer_reward": "0.040000000000000000",
-        "withdraw_addr_enabled": True
+        'community_tax': '0.000000000000000000',
+        'base_proposer_reward': '0.010000000000000000',
+        'bonus_proposer_reward': '0.040000000000000000',
+        'withdraw_addr_enabled': True
     }
 
     # Distribution: module account registration
