@@ -449,7 +449,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
 
     # Staking: change bond_denom to uluna and max validators to 130
     genesis['app_state']['staking']['params'] = {
-        'unbonding_time': '1814400s',
+        'unbonding_time': '1814400s',  # 21 days
         'max_validators': 130,
         'max_entries': 7,
         'historical_entries': 10000,
@@ -463,15 +463,13 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     }
 
     # Gov: change min deposit to 512 LUNA and deposit period to 7days
-    genesis['app_state']['gov']['deposit_params'] = [
-        {
-            'max_deposit_period': '604800s',  # 7days
-            'min_deposit': {
-                'denom': DENOM_LUNA,
-                'amount': '512000000'
-            },
-        }
-    ]
+    genesis['app_state']['gov']['deposit_params'] = {
+        'max_deposit_period': '604800s',  # 7days
+        'min_deposit': [{
+            'denom': DENOM_LUNA,
+            'amount': '512000000'
+        }],
+    }
 
     # Gov: make tally params quorum to 10%
     genesis['app_state']['gov']['tally_params'] = {
@@ -521,6 +519,9 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         contract_address_map=contract_address_map,
     )
 
+    # explicit clear
+    pre_attack_snapshot = None
+
     post_attack_snapshot: GenesisDoc = json.loads(
         parsed_args.post_attack_snapshot.read())
     post_attack_allocation = process_post_attack_snapshot(
@@ -528,6 +529,9 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         vesting_schedule_map=vesting_schedule_map,
         contract_address_map=contract_address_map,
     )
+
+    # explicit clear
+    post_attack_snapshot = None
 
     for address, schedules in vesting_schedule_map.items():
         [total_amount, vesting_amount, start_time,
