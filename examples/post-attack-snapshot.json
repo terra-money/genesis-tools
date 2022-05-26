@@ -223,6 +223,114 @@
               "amount": "100000"
             }
           ]
+        },
+        {
+          "address": "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc",
+          "coins": [
+            {
+              "denom": "uaud",
+              "amount": "20000000"
+            },
+            {
+              "denom": "ucny",
+              "amount": "1"
+            },
+            {
+              "denom": "ugbp",
+              "amount": "7891181"
+            },
+            {
+              "denom": "uinr",
+              "amount": "108"
+            },
+            {
+              "denom": "ujpy",
+              "amount": "8"
+            },
+            {
+              "denom": "ukrw",
+              "amount": "221247606508"
+            },
+            {
+              "denom": "uluna",
+              "amount": "5176030559231"
+            },
+            {
+              "denom": "umnt",
+              "amount": "119717406513"
+            },
+            {
+              "denom": "usdr",
+              "amount": "20525028748"
+            },
+            {
+              "denom": "uthb",
+              "amount": "36"
+            },
+            {
+              "denom": "uusd",
+              "amount": "199883932477390"
+            }
+          ]
+        },
+        {
+          "address": "terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2",
+          "coins": [
+            {
+              "denom": "ueur",
+              "amount": "824530"
+            },
+            {
+              "denom": "ukrw",
+              "amount": "48967302593"
+            },
+            {
+              "denom": "uluna",
+              "amount": "7009238777"
+            },
+            {
+              "denom": "umnt",
+              "amount": "118788"
+            },
+            {
+              "denom": "usdr",
+              "amount": "2325173"
+            },
+            {
+              "denom": "uusd",
+              "amount": "60396443684622"
+            }
+          ]
+        },
+        {
+          "address": "terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk",
+          "coins": [
+            {
+              "denom": "uluna",
+              "amount": "32844496520"
+            },
+            {
+              "denom": "uusd",
+              "amount": "6994412215684"
+            }
+          ]
+        },
+        {
+          "address": "terra10nmmwe8r3g99a9newtqa7a75xfgs2e8z87r2sf",
+          "coins": [
+            {
+              "denom": "ukrw",
+              "amount": "11000000"
+            },
+            {
+              "denom": "uluna",
+              "amount": "882795375852"
+            },
+            {
+              "denom": "uusd",
+              "amount": "1257612196611565"
+            }
+          ]
         }
       ],
       "supply": [],
