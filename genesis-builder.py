@@ -591,9 +591,9 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     for address, amount in genesis_validators.items():
 
         # Check whether validator address is newly created or not
-        # If validator already exist, skip luna allocation
         if address in vesting_schedule_map:
-            continue
+            print('validator '' + address + '' - already exists')
+            exit(-1)
 
         validator_allocation += int(amount)
         add_normal_account(genesis=genesis, address=address, amount=amount)
