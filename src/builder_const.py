@@ -35,4 +35,8 @@ BRIDGE_ADDRESSES: AddressMap = {
     'terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2': True,  # Shuttle BSC
     'terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk': True,  # Shuttle HMY
     'terra10nmmwe8r3g99a9newtqa7a75xfgs2e8z87r2sf': True,  # Wormhole
+    'terra1gdxfmwcfyrqv8uenllqn7mh290v7dk7x5qnz03': True,  # Anyswap/Multichain
+    'terra18hf7422vyyc447uh3wpzm50wzr54welhxlytfg': True,  # Allbridge
+    'terra1t74f2ahytt9uje3td2lnyv3fkay2jj2akj7ytv': True,  # Ren
+    'terra1qwzdua7928ugklpytdzhua92gnkxp9z4vhelq8': True,  # Synapse
 }
