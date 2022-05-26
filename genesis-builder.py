@@ -558,6 +558,14 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     for address, schedules in vesting_schedule_map.items():
         [total_amount, vesting_amount, start_time,
             periods] = merge_vesting_schedules(schedules)
+
+        # prevent making tiny balance account
+        # enforce minimum amount to receive vesting
+        # skip account creation if total_amount < 1 Luna 
+        if total_amount < 1_000_000:
+            del vesting_schedule_map[address]
+            continue
+
         add_periodic_vesting_account(genesis=genesis, address=address,
                                      total_amount=total_amount, vesting_amount=vesting_amount,
                                      start_time=start_time, vesting_periods=periods)
