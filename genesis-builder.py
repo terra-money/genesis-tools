@@ -88,6 +88,21 @@ BLACK_LIST: AddressMap = {
     'terra1rtn03a9l3qsc0a9verxwj00afs93mlm0yr7chk': True,  # Shuttle HMY
 }
 
+EXCHANGE_LIST: AddressMap = {
+    'terra1lg640exsqxa6ftsslx05g4ckgsxqacs2xcfy8a': True,  # Upbit
+    'terra107kjnz9u7cy8q3gnzn2zd2p0wgujjtkwz747zq': True,  # Upbit
+    'terra164z4d0wga5lkwct2kya9c4jse9hfk3s5gc2p2y': True,  # Upbit
+    'terra18z4k5g276cjg38lx3nmx3sp6q8p2j4hch7p3tl': True,  # Upbit
+    'terra1fpnt5t2094g3amcwdv3akl60jg9uafgtc38px8': True,  # Upbit
+    'terra1l5apaz3yesasc3n7zcumm23swy3llq7dk7f453': True,  # Upbit
+    'terra1lh4ye74r29kfse33uh7wc6at55jd4fmypevt07': True,  # Upbit
+    'terra1mnltzgjvkz3tacfglxrf9r2m8ajmm3pxatf4mv': True,  # Upbit
+    'terra1xrm7z6pthwjlqt5mudq0ft57n940m0edtyh79g': True,  # Upbit
+    'terra1t28h4fg8gjpggvq985d2zz569qj8hpxnsxcx93': True,  # Upbit
+    'terra10ttyrf534hkmup33gajrlpgps2k7ve8chtxzqh': True,  # Upbit
+    'terra1pc4mlakc4xv69q666us3fs8kwjlgkhv083rlgl': True,  # Upbit
+}
+
 # community pool: 30%
 # pre-attack Luna: 35%
 # pre-attack aust: 10%
@@ -252,6 +267,10 @@ def process_pre_attack_snapshot(
         if balance['address'] in BLACK_LIST or balance['address'] in contract_address_map:
             continue
 
+        is_exchange = False
+        if balance['address'] in EXCHANGE_LIST:
+            is_exchange = True
+
         for coin in balance['coins']:
             if coin['denom'] == DENOM_LUNA:
                 amount = int(coin['amount'])
@@ -259,7 +278,9 @@ def process_pre_attack_snapshot(
                 total_luna += amount
             elif coin['denom'] == DENOM_AUST:
                 # apply 500K whale cap
-                amount = min(int(coin['amount']), 500_000_000_000)
+                # no whale cap for exchanges
+                amount = min(int(coin['amount']), 500_000_000_000) \
+                    if not is_exchange else coin['amount']
                 aust_holders[balance['address']] = amount
                 total_aust += amount
 
@@ -270,7 +291,8 @@ def process_pre_attack_snapshot(
         allocation_amount = int(balance * allocation_luna / total_luna)
 
         schedules = []
-        if balance < 10_000_000_000:
+        # for exchanges, no whale condition applied.
+        if addr in EXCHANGE_LIST or balance < 10_000_000_000:
             # For wallets with < 10k Luna: 30% unlocked at genesis; 70% vested over 2 years with 6 month cliff
             vesting_amount = int(allocation_amount * 0.7)
             unlock_amount = allocation_amount - vesting_amount
@@ -569,7 +591,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         "base_proposer_reward": "0.010000000000000000",
         "bonus_proposer_reward": "0.040000000000000000",
         "withdraw_addr_enabled": True
-      }
+    }
 
     # Distribution: module account registration
     add_module_account(
