@@ -447,8 +447,14 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         }
     }
 
-    # Staking: change bond_denom to uluna
-    genesis['app_state']['staking']['params']['bond_denom'] = DENOM_LUNA
+    # Staking: change bond_denom to uluna and max validators to 130
+    genesis['app_state']['staking']['params'] = {
+        'unbonding_time': '1814400s',
+        'max_validators': 130,
+        'max_entries': 7,
+        'historical_entries': 10000,
+        'bond_denom': DENOM_LUNA
+    }
 
     # Crisis: change constant fee to 512 LUNA
     genesis['app_state']['crisis']['constant_fee'] = {
@@ -459,7 +465,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     # Gov: change min deposit to 512 LUNA and deposit period to 7days
     genesis['app_state']['gov']['deposit_params'] = [
         {
-            'max_deposit_period': '604800s', # 7days
+            'max_deposit_period': '604800s',  # 7days
             'min_deposit': {
                 'denom': DENOM_LUNA,
                 'amount': '512000000'
