@@ -195,7 +195,10 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         exchange_address_map,
     ] = build_exchange_data()
 
-    ibc_address_map = build_ibc_address_map()
+    [
+        ibc_address_map,
+        ibc_account_map,
+    ] = build_ibc_address_map()
 
     pre_attack_snapshot: GenesisDoc = json.loads(
         parsed_args.pre_attack_snapshot.read())
@@ -207,6 +210,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         exchange_map=exchange_map,
         exchange_address_name_map=exchange_address_name_map,
         ibc_address_map=ibc_address_map,
+        ibc_account_map=ibc_account_map,
     )
 
     # explicit clear
@@ -222,6 +226,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         exchange_map=exchange_map,
         exchange_address_name_map=exchange_address_name_map,
         ibc_address_map=ibc_address_map,
+        ibc_account_map=ibc_account_map,
     )
 
     # explicit clear

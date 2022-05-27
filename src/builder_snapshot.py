@@ -88,6 +88,7 @@ def process_pre_attack_snapshot(
         exchange_address_name_map: AddressNameMap,
         exchange_address_map: AddressMap,
         ibc_address_map: AddressMap,
+        ibc_account_map: IBCAccountMap,
 ) -> int:
     allocation_luna = PRE_ATTACK_LUNA
     allocation_aust = PRE_ATTACK_AUST
@@ -152,6 +153,11 @@ def process_pre_attack_snapshot(
             exchange = exchange_map[name]
             exchange['pre_attack_bridged_allocated'] = True
 
+        ibc_account: IBCAccount = None
+        if address in ibc_account_map:
+            ibc_account = ibc_account_map[address]
+            ibc_account['pre_attack_ibc_allocated'] = True
+
         for coin in balance['coins']:
             denom = coin['denom']
             amount = int(coin['amount'])
@@ -160,6 +166,9 @@ def process_pre_attack_snapshot(
                 amount = amount \
                     if exchange == None \
                     else amount + exchange['pre_attack_bridged_luna']
+                amount = amount \
+                    if ibc_account == None \
+                    else amount + ibc_account['pre_attack_ibc_luna']
 
                 luna_holders[address] = amount
                 total_luna += amount
@@ -188,7 +197,17 @@ def process_pre_attack_snapshot(
         total_aust += exchange['pre_attack_bridged_aust']
         exchange['pre_attack_bridged_allocated'] = True
 
-    # exchange bridge luna absorbed into
+    # if the ibc account not exist, then allocation
+    # is not conducted so need to manually add holder
+    ibc_accounts_not_allocated = filter(
+        lambda v: not v['pre_attack_ibc_allocated'], ibc_account_map.values())
+    for ibc_account in ibc_accounts_not_allocated:
+        address = ibc_account['address']
+        luna_holders[address] = ibc_account['pre_attack_ibc_luna']
+        total_luna += ibc_account['pre_attack_ibc_luna']
+        ibc_account['pre_attack_ibc_allocated'] = True
+
+    # exchange bridge luna & aust absorbed into
     # exchange's representative address,
     # so need to subtracted from bridge_luna
     exchange_bridge_luna_amount = sum(
@@ -198,6 +217,12 @@ def process_pre_attack_snapshot(
     exchange_bridge_aust_amount = sum(
         map(lambda v: v['pre_attack_bridged_aust'], exchange_map.values()))
     bridge_aust -= exchange_bridge_aust_amount
+
+    # ibc accounts are allocated,
+    # so need to subtracted from ibc_luna
+    ibc_accounts_luna_amount = sum(
+        map(lambda v: v['pre_attack_ibc_luna'], ibc_account_map.values()))
+    ibc_luna -= ibc_accounts_luna_amount
 
     # bridge and ibc balance should be reflected to total without holder
     # so that the bridge allocation is sent to community pool
@@ -282,6 +307,7 @@ def process_post_attack_snapshot(
         exchange_map: ExchangeMap,
         exchange_address_name_map: AddressNameMap,
         ibc_address_map: AddressMap,
+        ibc_account_map: IBCAccountMap,
 ) -> int:
     allocation_luna = POST_ATTACK_LUNA
     allocation_ust = POST_ATTACK_UST
@@ -342,6 +368,11 @@ def process_post_attack_snapshot(
             exchange = exchange_map[name]
             exchange['post_attack_bridged_allocated'] = True
 
+        ibc_account: IBCAccount = None
+        if address in ibc_account_map:
+            ibc_account = ibc_account_map[address]
+            ibc_account['post_attack_ibc_allocated'] = True
+
         for coin in balance['coins']:
             denom = coin['denom']
             amount = int(coin['amount'])
@@ -350,6 +381,9 @@ def process_post_attack_snapshot(
                 amount = amount \
                     if exchange == None \
                     else amount + exchange['post_attack_bridged_luna']
+                amount = amount \
+                    if ibc_account == None \
+                    else amount + ibc_account['post_attack_ibc_luna']
 
                 luna_holders[address] = amount
                 total_luna += amount
@@ -357,6 +391,9 @@ def process_post_attack_snapshot(
                 amount = amount \
                     if exchange == None \
                     else amount + exchange['post_attack_bridged_ust']
+                amount = amount \
+                    if ibc_account == None \
+                    else amount + ibc_account['post_attack_ibc_ust']
 
                 ust_holders[address] = amount
                 total_ust += amount
@@ -374,6 +411,18 @@ def process_post_attack_snapshot(
         total_ust += exchange['post_attack_bridged_ust']
         exchange['post_attack_bridged_allocated'] = True
 
+    # if the ibc account not exist, then allocation
+    # is not conducted so need to manually add holder
+    ibc_accounts_not_allocated = filter(
+        lambda v: not v['post_attack_ibc_allocated'], ibc_account_map.values())
+    for ibc_account in ibc_accounts_not_allocated:
+        address = ibc_account['address']
+        luna_holders[address] = ibc_account['post_attack_ibc_luna']
+        ust_holders[address] = ibc_account['post_attack_ibc_ust']
+        total_luna += ibc_account['post_attack_ibc_luna']
+        total_ust += ibc_account['post_attack_ibc_ust']
+        ibc_account['post_attack_ibc_allocated'] = True
+
     # exchange bridge tokens absorbed into
     # exchange's representative address,
     # so need to subtracted from bridge tokens
@@ -385,17 +434,27 @@ def process_post_attack_snapshot(
         map(lambda v: v['post_attack_bridged_ust'], exchange_map.values()))
     bridge_ust -= exchange_bridge_ust_amount
 
+    # ibc accounts are allocated,
+    # so need to subtracted from ibc_luna
+    ibc_accounts_luna_amount = sum(
+        map(lambda v: v['post_attack_ibc_luna'], ibc_account_map.values()))
+    ibc_luna -= ibc_accounts_luna_amount
+
+    ibc_accounts_ust_amount = sum(
+        map(lambda v: v['post_attack_ibc_ust'], ibc_account_map.values()))
+    ibc_ust -= ibc_accounts_ust_amount
+
     # bridge and ibc balance should be reflected to total without holder
     # so that the bridge allocation is sent to community pool
-    total_luna += bridge_luna + ibc_luna
-    total_ust += bridge_ust + ibc_ust
+    total_luna += (bridge_luna + ibc_luna)
+    total_ust += (bridge_ust + ibc_ust)
 
     total_allocation_amount: int = 0
 
     # allocate luna portion
     for addr, balance in luna_holders.items():
         allocation_amount = int(balance * allocation_luna / total_luna)
-        
+
         # skip tiny amount allocation
         if allocation_amount < 1_000_000:
             continue

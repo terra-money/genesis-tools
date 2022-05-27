@@ -78,6 +78,7 @@ mv ./pre-attack-snapshot.json ./post-attack-snapshot.json ./genesis-tools
 
 3. Run genesis builder script
 ```sh
+# pip3 install bech32
 python3 ./src/genesis_builder.py \
     ./genesis-template.json \
     ./pre-attack-snapshot.json \

@@ -66,8 +66,17 @@ class Exchange(TypedDict):
     pre_attack_bridged_allocated: bool
     post_attack_bridged_allocated: bool
 
+class IBCAccount(TypedDict):
+    address: str
+    pre_attack_ibc_luna: int
+    post_attack_ibc_luna: int
+    post_attack_ibc_ust: int
+    pre_attack_ibc_allocated: bool
+    post_attack_ibc_allocated: bool
+
 Balances = List[Balance]
 VestingScheduleMap = Dict[str, List[VestingSchedule]]
 AddressMap = Dict[str, bool]
 AddressNameMap = Dict[str, str]
 ExchangeMap = Dict[str, Exchange]
+IBCAccountMap = Dict[str, IBCAccount]
