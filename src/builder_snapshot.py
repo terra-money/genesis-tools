@@ -151,12 +151,22 @@ def process_pre_attack_snapshot(
         if address in exchange_address_name_map:
             name = exchange_address_name_map[address]
             exchange = exchange_map[name]
-            exchange['pre_attack_bridged_allocated'] = True
+
+            # prevent multiple allocation
+            if not exchange['pre_attack_bridged_allocated']:
+                exchange['pre_attack_bridged_allocated'] = True
+            else:
+                exchange = None
 
         ibc_account: IBCAccount = None
         if address in ibc_account_map:
             ibc_account = ibc_account_map[address]
-            ibc_account['pre_attack_ibc_allocated'] = True
+
+            # prevent multiple allocation
+            if not ibc_account['pre_attack_ibc_allocated']:
+                ibc_account['pre_attack_ibc_allocated'] = True
+            else:
+                ibc_account = None
 
         for coin in balance['coins']:
             denom = coin['denom']
@@ -170,7 +180,9 @@ def process_pre_attack_snapshot(
                     if ibc_account == None \
                     else amount + ibc_account['pre_attack_ibc_luna']
 
-                luna_holders[address] = amount
+                luna_holders[address] = amount \
+                    if address not in luna_holders \
+                    else luna_holders[address] + amount
                 total_luna += amount
             elif denom == DENOM_AUST:
                 amount = amount \
@@ -181,7 +193,9 @@ def process_pre_attack_snapshot(
                 # no whale cap for exchanges
                 amount = min(amount, 500_000_000_000) \
                     if not is_exchange else amount
-                aust_holders[address] = amount
+                aust_holders[address] = amount \
+                    if address not in aust_holders \
+                    else aust_holders[address] + amount
                 total_aust += amount
 
     # if the exchange's representative account not exist,
@@ -366,12 +380,22 @@ def process_post_attack_snapshot(
         if address in exchange_address_name_map:
             name = exchange_address_name_map[address]
             exchange = exchange_map[name]
-            exchange['post_attack_bridged_allocated'] = True
+
+            # prevent multiple allocation
+            if not exchange['post_attack_bridged_allocated']:
+                exchange['post_attack_bridged_allocated'] = True
+            else:
+                exchange = None
 
         ibc_account: IBCAccount = None
-        if address in ibc_account_map:
+        if address in ibc_account_map and not ibc_account['post_attack_ibc_allocated']:
             ibc_account = ibc_account_map[address]
-            ibc_account['post_attack_ibc_allocated'] = True
+
+            # prevent multiple allocation
+            if not ibc_account['post_attack_ibc_allocated']:
+                ibc_account['post_attack_ibc_allocated'] = True
+            else:
+                ibc_account = None
 
         for coin in balance['coins']:
             denom = coin['denom']
@@ -385,7 +409,9 @@ def process_post_attack_snapshot(
                     if ibc_account == None \
                     else amount + ibc_account['post_attack_ibc_luna']
 
-                luna_holders[address] = amount
+                luna_holders[address] = amount \
+                    if address not in luna_holders \
+                    else luna_holders[address] + amount
                 total_luna += amount
             elif denom == DENOM_UST:
                 amount = amount \
@@ -395,7 +421,9 @@ def process_post_attack_snapshot(
                     if ibc_account == None \
                     else amount + ibc_account['post_attack_ibc_ust']
 
-                ust_holders[address] = amount
+                ust_holders[address] = amount \
+                    if address not in ust_holders \
+                    else ust_holders[address] + amount
                 total_ust += amount
 
     # if the exchange's representative account not exist,
