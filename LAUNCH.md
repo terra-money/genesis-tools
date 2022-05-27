@@ -80,6 +80,7 @@ mv ./pre-attack-snapshot.json ./post-attack-snapshot.json ./genesis-tools
 ```sh
 # install dependency
 pip3 install bech32
+pip3 install python-dateutil
 
 python3 ./src/genesis_builder.py \
     ./genesis-template.json \

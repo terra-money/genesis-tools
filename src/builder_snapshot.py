@@ -13,7 +13,7 @@ from builder_const import *
 # t4 |      |      |++++++|++++++|++++++|++++++|++++++|++++++|++++++|++++++|
 
 
-def merge_vesting_schedules(schedules: List[VestingSchedule]) -> Tuple[int, int, int, List[VestingPeriod]]:
+def merge_vesting_schedules(genesis_time, schedules: List[VestingSchedule]) -> Tuple[int, int, int, List[VestingPeriod]]:
     periods: List[VestingPeriod] = []
 
     total_amount = sum(map(lambda v: v['amount'], schedules))
@@ -21,7 +21,7 @@ def merge_vesting_schedules(schedules: List[VestingSchedule]) -> Tuple[int, int,
         map(lambda v: v['amount'] if v['type'] == 1 else 0, schedules))
     vesting_amount = total_amount - unlocked_amount
 
-    start_time = 60 * 60 * 24 * 30 * 6  # 6 month
+    start_time = genesis_time + 60 * 60 * 24 * 30 * 6  # 6 month
     p1_amount = sum(map(lambda v: int(v['amount'] / 4)
                         if v['type'] == 2 else 0, schedules))
     if p1_amount != 0:

@@ -1,6 +1,7 @@
 import sys
 import json
 import argparse
+import dateutil.parser
 
 from typing import List, Dict
 from builder_types import *
@@ -71,6 +72,9 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     # ChainID and Genesis Time
     genesis['chain_id'] = parsed_args.chain_id
     genesis['genesis_time'] = parsed_args.genesis_time
+
+    genesis_date = dateutil.parser.parse(parsed_args.genesis_time)
+    genesis_timestamp = int(genesis_date.timestamp())
 
     # Consensus Params: Block
     genesis['consensus_params']['block'] = {
@@ -238,7 +242,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
             vesting_amount,
             start_time,
             periods,
-        ] = merge_vesting_schedules(schedules)
+        ] = merge_vesting_schedules(genesis_timestamp, schedules)
 
         add_periodic_vesting_account(genesis=genesis, address=address,
                                      total_amount=total_amount, vesting_amount=vesting_amount,
