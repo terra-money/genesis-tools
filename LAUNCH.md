@@ -36,10 +36,12 @@ make install
 3. Verify the exporter binary versions
 ```sh
 terrad version --long
-core: [placeholder]
-git commit: [placeholder]
-go.sum hash: [placeholder]
-build tags: netgo ledger
+name: terra
+server_name: terrad
+version: ""
+commit: 2565577ccf47d1b11a82d77500a0cb880080a70c
+build_tags: netgo,ledger
+go: go version go1.18 darwin/arm64
 ```
 
 4. Take pre-attack snapshot
@@ -56,11 +58,11 @@ terrad export --height 7790000 > post-attack-snapshot.json
 ```sh
 # pre-attack
 jq -S -c -M '' pre-attack-snapshot.json | shasum -a 256
-[placeholder]
+0ac0d5b8f7ea49e500d9033687a6720a99818e99280aba8f12f00b39832a0d5c
 
 # post-attack
 jq -S -c -M '' post-attack-snapshot.json | shasum -a 256
-[placeholder]
+9d294b300eb3d936d9567eb128bc66651d196b07c37583e2e051b3bced965766
 ```
 
 ## Penultimate Genesis
@@ -95,7 +97,7 @@ python3 ./src/genesis_builder.py \
 4. Verify the SHA256 of the (sorted) penultimate-genesis.json
 ```sh
 jq -S -c -M '' penultimate-genesis.json | shasum -a 256
-[placeholder]
+def346f3ef21e5f484c4e8634918d527382115b871786bd794fac5dacdf46c63
 ```
 
 # GenTx
@@ -113,16 +115,18 @@ make install
 2. Verify the binary version
 ```sh
 terrad version --long
-core: v2.0.0
-git commit: [placeholder]
-go.sum hash: [placeholder]
-build tags: netgo ledger
+name: terra
+server_name: terrad
+version: v2.0.0
+commit: ea682c41e7e71ba0b182c9e7f989855fb9595885
+build_tags: netgo ledger,
+go: go version go1.18.2 linux/amd64
 ```
 
 3. Prepare Environment
 ```sh
 # install or move penultimate-genesis.json to server
-wget [placeholder]
+wget https://phoenix-genesis.s3.us-west-1.amazonaws.com/penultimate-genesis.json
 
 # move genesis to config location
 mv ./penultimate-genesis.json ~/.terra/config/genesis.json
@@ -140,7 +144,8 @@ terrad gentx validator 1000000uluna \
     --identity="AAAAAAAAAAAA" \
     --commission-rate="0.1" \
     --commission-max-rate="0.2" \
-    --commission-max-change-rate="0.01"
+    --commission-max-change-rate="0.01" \ 
+    --note="gentx"
 ```
 
 5. Upload generated GenTx file to this repository's gentx folder via PR.
