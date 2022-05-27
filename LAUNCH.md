@@ -128,6 +128,10 @@ go: go version go1.18.2 linux/amd64
 # install or move penultimate-genesis.json to server
 wget https://phoenix-genesis.s3.us-west-1.amazonaws.com/penultimate-genesis.json
 
+# verify the SHA256 of the (downloaded) penultimate-genesis.json
+jq -S -c -M '' penultimate-genesis.json | shasum -a 256
+def346f3ef21e5f484c4e8634918d527382115b871786bd794fac5dacdf46c63
+
 # move genesis to config location
 mv ./penultimate-genesis.json ~/.terra/config/genesis.json
 ```
