@@ -258,8 +258,17 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         validator_allocation += int(amount)
         add_normal_account(genesis=genesis, address=address, amount=amount)
 
+    emergency_allocation: int = 0
+    if EMERGENCY_ALLOCATION_ADDRESS != None:
+        emergency_allocation = EMERGENCY_ALLOCATION
+        add_normal_account(
+            genesis=genesis,
+            address=EMERGENCY_ALLOCATION_ADDRESS,
+            amount=emergency_allocation,
+        )
+
     community_pool_allocation = TOTAL_ALLOCATION - pre_attack_allocation - \
-        post_attack_allocation - validator_allocation
+        post_attack_allocation - validator_allocation - emergency_allocation
 
     # Distribution: community pool
     genesis['app_state']['distribution']['fee_pool']['community_pool'] = [{
