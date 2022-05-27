@@ -145,7 +145,7 @@ terrad gentx validator 1000000uluna \
     --commission-rate="0.1" \
     --commission-max-rate="0.2" \
     --commission-max-change-rate="0.01" \ 
-    --node-id="validator-moniker" 
+    --node-id="validator-moniker" \
     --ip="0.0.0.0"
 ```
 
