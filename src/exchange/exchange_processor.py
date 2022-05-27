@@ -8,7 +8,7 @@ def build_exchange_data() -> Tuple[ExchangeMap, AddressNameMap, AddressMap]:
     exchange_address_map: AddressMap = {}
 
     cur_dir = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(cur_dir, './exchange_addresses.csv'), newline='') as csv_file:
+    with open(os.path.join(cur_dir, './terra_wallets.csv'), newline='') as csv_file:
         lines = csv.reader(csv_file, delimiter=',')
         next(lines)
         for row in lines:
@@ -44,7 +44,7 @@ def build_exchange_data() -> Tuple[ExchangeMap, AddressNameMap, AddressMap]:
                 print('no terra address found for ' + name)
                 exit(-1)
 
-            if denom == 'AUST':
+            if denom == 'aUST':
                 exchange_map[name]['pre_attack_bridged_aust'] += amount
             elif denom == 'LUNA':
                 exchange_map[name]['pre_attack_bridged_luna'] += amount
@@ -63,7 +63,7 @@ def build_exchange_data() -> Tuple[ExchangeMap, AddressNameMap, AddressMap]:
                 print('no terra address found for ' + name)
                 exit(-1)
             
-            if denom == 'UST':
+            if denom == 'UST' or denom == "aUST":
                 exchange_map[name]['post_attack_bridged_ust'] += amount
             elif denom == 'LUNA':
                 exchange_map[name]['post_attack_bridged_luna'] += amount

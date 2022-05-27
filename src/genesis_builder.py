@@ -97,7 +97,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
 
     # Bank: set denom meta
     genesis['app_state']['bank']['denom_metadata'] = [{
-        'description': 'The native staking token of the Terra 2.0',
+        'description': 'The native staking token of Terra 2.0',
         'denom_units': [
             {'denom': 'uluna', 'exponent': 0, 'aliases': ['microluna']},
             {'denom': 'mluna', 'exponent': 3, 'aliases': ['milliluna']},
@@ -140,7 +140,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         'amount': '512000000',
     }
 
-    # Gov: change min deposit to 512 LUNA and deposit period to 7days
+    # Gov: change min deposit to 512 LUNA and deposit period to 7 days
     genesis['app_state']['gov']['deposit_params'] = {
         'max_deposit_period': '604800s',  # 7days
         'min_deposit': [{
@@ -149,14 +149,14 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         }],
     }
 
-    # Gov: make tally params quorum to 10%
+    # Gov: set tally params quorum to 10%
     genesis['app_state']['gov']['tally_params'] = {
         'quorum': '0.100000000000000000',
         'threshold': '0.500000000000000000',
         'veto_threshold': '0.334000000000000000'
     }
 
-    # Gov: set voting period 7days
+    # Gov: set voting period to 7 days
     genesis['app_state']['gov']['voting_params'] = {
         'voting_period': '604800s'
     }
