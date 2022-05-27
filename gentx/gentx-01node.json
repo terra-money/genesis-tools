@@ -11,7 +11,7 @@
           "details": "01node Professional Staking Services for Terra, Evmos, Nomic, Crescent, Juno, Regen, Osmosis, Cosmos, Solana, Near, Skale, Gnosis, Sentinel, Persistence, TheGraph"
         },
         "commission": {
-          "rate": "0.080000000000000000",
+          "rate": "0.050000000000000000",
           "max_rate": "0.200000000000000000",
           "max_change_rate": "0.010000000000000000"
         },
@@ -56,6 +56,6 @@
     }
   },
   "signatures": [
-    "ibzBWrjv+SoCORvxQ8RVdik7/2tS93ugpCSCnsg9gr18TWx70Zz/GJEXGwqwonQrgS2V32n57p+CaUHl+3GY2A=="
+    "crgvCEU6dviVb9Jz40R7noR6FPkHHZ5azIRvTwuPy8cEqx2lGp1vUg8qWstAao9l8d+EDb/IrU9+dH2AvnhYpQ=="
   ]
 }
