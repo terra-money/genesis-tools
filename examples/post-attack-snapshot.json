@@ -216,6 +216,19 @@
           "coins": [
             {
               "denom": "uluna",
+              "amount": "10000000000"
+            },
+            {
+              "denom": "uusd",
+              "amount": "1000000"
+            }
+          ]
+        },
+        {
+          "address": "terra1h8ljdmae7lx05kjj79c9ekscwsyjd3yr8wyvdn",
+          "coins": [
+            {
+              "denom": "uluna",
               "amount": "100000000"
             },
             {
