@@ -60,7 +60,7 @@ class Balance(TypedDict):
 class Exchange(TypedDict):
     address: str
     pre_attack_bridged_luna: int
-    pre_attack_bridged_ust: int
+    pre_attack_bridged_aust: int
     post_attack_bridged_luna: int
     post_attack_bridged_ust: int
     pre_attack_bridged_allocated: bool

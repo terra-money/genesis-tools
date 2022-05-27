@@ -164,6 +164,10 @@ def process_pre_attack_snapshot(
                 luna_holders[address] = amount
                 total_luna += amount
             elif denom == DENOM_AUST:
+                amount = amount \
+                    if exchange == None \
+                    else amount + exchange['pre_attack_bridged_aust']
+
                 # apply 500K whale cap
                 # no whale cap for exchanges
                 amount = min(amount, 500_000_000_000) \
@@ -178,10 +182,10 @@ def process_pre_attack_snapshot(
         lambda v: not v['pre_attack_bridged_allocated'], exchange_map.values())
     for exchange in exchange_not_allocated:
         address = exchange['address']
-        amount = exchange['pre_attack_bridged_luna']
-
-        luna_holders[address] = amount
-        total_luna += amount
+        luna_holders[address] = exchange['pre_attack_bridged_luna']
+        aust_holders[address] = exchange['pre_attack_bridged_aust']
+        total_luna += exchange['pre_attack_bridged_luna']
+        total_aust += exchange['pre_attack_bridged_aust']
         exchange['pre_attack_bridged_allocated'] = True
 
     # exchange bridge luna absorbed into
@@ -190,6 +194,10 @@ def process_pre_attack_snapshot(
     exchange_bridge_luna_amount = sum(
         map(lambda v: v['pre_attack_bridged_luna'], exchange_map.values()))
     bridge_luna -= exchange_bridge_luna_amount
+
+    exchange_bridge_aust_amount = sum(
+        map(lambda v: v['pre_attack_bridged_aust'], exchange_map.values()))
+    bridge_aust -= exchange_bridge_aust_amount
 
     # bridge and ibc balance should be reflected to total without holder
     # so that the bridge allocation is sent to community pool

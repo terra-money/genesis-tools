@@ -23,7 +23,7 @@ def build_exchange_data() -> Tuple[ExchangeMap, AddressNameMap, AddressMap]:
                     'post_attack_bridged_ust': 0,
                     'pre_attack_bridged_luna': 0,
                     'post_attack_bridged_luna': 0,
-                    'pre_attack_bridged_ust': 0,
+                    'pre_attack_bridged_aust': 0,
                     'post_attack_bridged_allocated': False,
                     'pre_attack_bridged_allocated': False,
                 }
@@ -43,9 +43,9 @@ def build_exchange_data() -> Tuple[ExchangeMap, AddressNameMap, AddressMap]:
             if name not in exchange_map:
                 print('no terra address found for ' + name)
                 exit(-1)
-            
-            if denom == 'UST':
-                exchange_map[name]['pre_attack_bridged_ust'] += amount
+
+            if denom == 'AUST':
+                exchange_map[name]['pre_attack_bridged_aust'] += amount
             elif denom == 'LUNA':
                 exchange_map[name]['pre_attack_bridged_luna'] += amount
         
