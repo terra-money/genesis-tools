@@ -144,8 +144,8 @@ terrad gentx validator 1000000uluna \
     --identity="AAAAAAAAAAAA" \
     --commission-rate="0.1" \
     --commission-max-rate="0.2" \
-    --commission-max-change-rate="0.01" \ 
-    --node-id="validator-moniker" 
+    --commission-max-change-rate="0.01" \
+    --node-id="$(tr -dc 'a-f0-9' < /dev/urandom | head -c40)" \
     --ip="0.0.0.0"
 ```
 
