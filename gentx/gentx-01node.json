@@ -28,7 +28,7 @@
         }
       }
     ],
-    "memo": "ce5b1cee2187fe648113caa05b505648b160adb3@195.14.6.132:26656",
+    "memo": "ce5b1cee2187fe648113caa05b505648b160adb3@0.0.0.0:26656",
     "timeout_height": "0",
     "extension_options": [],
     "non_critical_extension_options": []
@@ -56,6 +56,6 @@
     }
   },
   "signatures": [
-    "crgvCEU6dviVb9Jz40R7noR6FPkHHZ5azIRvTwuPy8cEqx2lGp1vUg8qWstAao9l8d+EDb/IrU9+dH2AvnhYpQ=="
+    "6MHH8lsFu9m3HtHqAPK9zL1d9tTGm+01HS71HAAlyrcG1peINJTtx4waGY93WRWhiPgGHCM1EOU2yWadi6W3FQ=="
   ]
 }
