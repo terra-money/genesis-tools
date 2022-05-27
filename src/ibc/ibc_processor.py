@@ -18,6 +18,8 @@ def build_ibc_address_map() -> Tuple[AddressMap, IBCAccountMap]:
 
     ibc_account_map: IBCAccountMap = {}
     read_and_convert_address(chain_name='sifchain', ibc_account_map=ibc_account_map)
+    read_and_convert_address(chain_name='crescent', ibc_account_map=ibc_account_map)
+    read_and_convert_address(chain_name='osmo', ibc_account_map=ibc_account_map)
     
     return [ibc_address_map, ibc_account_map]
 
@@ -31,6 +33,8 @@ def read_and_convert_address(chain_name: str, ibc_account_map: IBCAccountMap):
             address = row[1]
             denom = row[2]
             amount = int(float(row[3]) * 1_000_000)
+            if amount == 0:
+                continue
 
             # convert hrp to terra
             [_, words] = bech32_decode(address)
@@ -61,6 +65,8 @@ def read_and_convert_address(chain_name: str, ibc_account_map: IBCAccountMap):
             address = row[1]
             denom = row[2]
             amount = int(float(row[3]) * 1_000_000)
+            if amount == 0:
+                continue
 
             # convert hrp to terra
             [_, words] = bech32_decode(address)

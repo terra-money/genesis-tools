@@ -139,9 +139,8 @@ def add_periodic_vesting_account(
     vesting_periods: List[VestingPeriod],
 ):
 
-    def take_length(v: VestingPeriod) -> int:
-        return int(v['length'])
-    end_time = str(int(start_time) + sum(map(take_length, vesting_periods)))
+    end_time = str(int(start_time) +
+                   sum(map(lambda v: int(v['length']), vesting_periods)))
 
     genesis['app_state']['auth']['accounts'].append({
         '@type': '/cosmos.vesting.v1beta1.PeriodicVestingAccount',

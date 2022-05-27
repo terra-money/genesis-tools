@@ -1,6 +1,7 @@
 import sys
 import json
 import argparse
+import dateutil.parser
 
 from typing import List, Dict
 from builder_types import *
@@ -71,6 +72,9 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
     # ChainID and Genesis Time
     genesis['chain_id'] = parsed_args.chain_id
     genesis['genesis_time'] = parsed_args.genesis_time
+
+    genesis_date = dateutil.parser.parse(parsed_args.genesis_time)
+    genesis_timestamp = int(genesis_date.timestamp())
 
     # Consensus Params: Block
     genesis['consensus_params']['block'] = {
@@ -238,7 +242,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
             vesting_amount,
             start_time,
             periods,
-        ] = merge_vesting_schedules(schedules)
+        ] = merge_vesting_schedules(genesis_timestamp, schedules)
 
         add_periodic_vesting_account(genesis=genesis, address=address,
                                      total_amount=total_amount, vesting_amount=vesting_amount,
@@ -264,7 +268,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         add_normal_account(
             genesis=genesis,
             address=EMERGENCY_ALLOCATION_ADDRESS,
-            amount=emergency_allocation,
+            amount=str(emergency_allocation),
         )
 
     community_pool_allocation = TOTAL_ALLOCATION - pre_attack_allocation - \
@@ -304,7 +308,7 @@ if __name__ == '__main__':
     parser = init_default_argument_parser(
         prog_desc='Genesis Builder for Terra Revival',
         default_chain_id='phoenix-1',
-        default_genesis_time='2022-05-27T06:00:00Z',
+        default_genesis_time='2022-05-28T06:00:00Z',
         default_pretty=False
     )
     main(parser)

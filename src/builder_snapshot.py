@@ -1,5 +1,6 @@
 from builder_types import *
 from builder_const import *
+from bech32 import bech32_decode
 
 # 1: genesis unlock
 # 2: 2 year vesting with 6 month cliff
@@ -13,7 +14,7 @@ from builder_const import *
 # t4 |      |      |++++++|++++++|++++++|++++++|++++++|++++++|++++++|++++++|
 
 
-def merge_vesting_schedules(schedules: List[VestingSchedule]) -> Tuple[int, int, int, List[VestingPeriod]]:
+def merge_vesting_schedules(genesis_time, schedules: List[VestingSchedule]) -> Tuple[int, int, int, List[VestingPeriod]]:
     periods: List[VestingPeriod] = []
 
     total_amount = sum(map(lambda v: v['amount'], schedules))
@@ -21,7 +22,7 @@ def merge_vesting_schedules(schedules: List[VestingSchedule]) -> Tuple[int, int,
         map(lambda v: v['amount'] if v['type'] == 1 else 0, schedules))
     vesting_amount = total_amount - unlocked_amount
 
-    start_time = 60 * 60 * 24 * 30 * 6  # 6 month
+    start_time = genesis_time + 60 * 60 * 24 * 30 * 6  # 6 month
     p1_amount = sum(map(lambda v: int(v['amount'] / 4)
                         if v['type'] == 2 else 0, schedules))
     if p1_amount != 0:
@@ -105,6 +106,10 @@ def process_pre_attack_snapshot(
     aust_holders: Dict[str, int] = {}
     for balance in balances:
         address = balance['address']
+        [hrp, words] = bech32_decode(address)
+        if hrp == None or words == None:
+            print('address - ' + address + ' wrong!!')
+            exit(-1)
 
         # Bridged assets will be funded to community pool.
         # so its amount should be reflected in total
@@ -338,6 +343,10 @@ def process_post_attack_snapshot(
     ust_holders: Dict[str, int] = {}
     for balance in balances:
         address = balance['address']
+        [hrp, words] = bech32_decode(address)
+        if hrp == None or words == None:
+            print('address - ' + address + ' wrong!!')
+            exit(-1)
 
         # Bridged assets will be funded to community pool (except exchange ones).
         # so its amount should be reflected in total
@@ -388,7 +397,7 @@ def process_post_attack_snapshot(
                 exchange = None
 
         ibc_account: IBCAccount = None
-        if address in ibc_account_map and not ibc_account['post_attack_ibc_allocated']:
+        if address in ibc_account_map:
             ibc_account = ibc_account_map[address]
 
             # prevent multiple allocation

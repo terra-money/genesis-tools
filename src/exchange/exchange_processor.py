@@ -41,8 +41,12 @@ def build_exchange_data() -> Tuple[ExchangeMap, AddressNameMap, AddressMap]:
             amount = int(float(row[8]) * 1_000_000)
             
             if name not in exchange_map:
-                print('no terra address found for ' + name)
-                exit(-1)
+                # just ignore line when the entry not found
+                continue
+
+                # print('no terra address found for ' + name)
+                # exit(-1)
+                
 
             if denom == 'aUST':
                 exchange_map[name]['pre_attack_bridged_aust'] += amount
@@ -60,8 +64,11 @@ def build_exchange_data() -> Tuple[ExchangeMap, AddressNameMap, AddressMap]:
             amount = int(float(row[8]) * 1_000_000)
             
             if name not in exchange_map:
-                print('no terra address found for ' + name)
-                exit(-1)
+                # just ignore line when the entry not found
+                continue
+
+                # print('no terra address found for ' + name)
+                # exit(-1)
             
             if denom == 'UST' or denom == "aUST":
                 exchange_map[name]['post_attack_bridged_ust'] += amount
