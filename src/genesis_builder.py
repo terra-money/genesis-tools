@@ -268,7 +268,7 @@ def process_raw_genesis(genesis: GenesisDoc, parsed_args) -> GenesisDoc:
         add_normal_account(
             genesis=genesis,
             address=EMERGENCY_ALLOCATION_ADDRESS,
-            amount=emergency_allocation,
+            amount=str(emergency_allocation),
         )
 
     community_pool_allocation = TOTAL_ALLOCATION - pre_attack_allocation - \
