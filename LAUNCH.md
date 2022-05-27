@@ -130,14 +130,17 @@ mv ./penultimate-genesis.json ~/.terra/config/genesis.json
 
 4. Execute GenTx
 ```sh
-terrad gentx [key-name] [amount-to-stake] \
-    --chain-id phoenix-1 \
-    --min-self-delegation=[] \
-    --security-contact=[] \
-    --moniker=[] \
-    --details=[] \
-    --commission-rate=[] \
-    ...
+terrad gentx validator 1000000uluna \
+    --chain-id="phoenix-1" \
+    --pubkey=$(terrad tendermint show-validator) \
+    --min-self-delegation="1"\
+    --security-contact="contact@aaa.services" \
+    --moniker=AAA \
+    --details="Trusted security provider for Terra Network and projects building on Terra." \
+    --identity="AAAAAAAAAAAA" \
+    --commission-rate="0.1" \
+    --commission-max-rate="0.2" \
+    --commission-max-change-rate="0.01"
 ```
 
 5. Upload generated GenTx file to this repository's gentx folder via PR.
