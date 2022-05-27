@@ -1,3 +1,5 @@
 **/.DS_Store
 .vscode
 penultimate-genesis.json
+post-attack-snapshot.json
+pre-attack-snapshot.json

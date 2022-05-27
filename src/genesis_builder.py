@@ -308,7 +308,7 @@ if __name__ == '__main__':
     parser = init_default_argument_parser(
         prog_desc='Genesis Builder for Terra Revival',
         default_chain_id='phoenix-1',
-        default_genesis_time='2022-05-27T06:00:00Z',
+        default_genesis_time='2022-05-28T06:00:00Z',
         default_pretty=False
     )
     main(parser)

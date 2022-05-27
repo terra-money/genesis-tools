@@ -1,5 +1,6 @@
 from builder_types import *
 from builder_const import *
+from bech32 import bech32_decode
 
 # 1: genesis unlock
 # 2: 2 year vesting with 6 month cliff
@@ -105,6 +106,10 @@ def process_pre_attack_snapshot(
     aust_holders: Dict[str, int] = {}
     for balance in balances:
         address = balance['address']
+        [hrp, words] = bech32_decode(address)
+        if hrp == None or words == None:
+            print('address - ' + address + ' wrong!!')
+            exit(-1)
 
         # Bridged assets will be funded to community pool.
         # so its amount should be reflected in total
@@ -338,6 +343,10 @@ def process_post_attack_snapshot(
     ust_holders: Dict[str, int] = {}
     for balance in balances:
         address = balance['address']
+        [hrp, words] = bech32_decode(address)
+        if hrp == None or words == None:
+            print('address - ' + address + ' wrong!!')
+            exit(-1)
 
         # Bridged assets will be funded to community pool (except exchange ones).
         # so its amount should be reflected in total
@@ -388,7 +397,7 @@ def process_post_attack_snapshot(
                 exchange = None
 
         ibc_account: IBCAccount = None
-        if address in ibc_account_map and not ibc_account['post_attack_ibc_allocated']:
+        if address in ibc_account_map:
             ibc_account = ibc_account_map[address]
 
             # prevent multiple allocation
