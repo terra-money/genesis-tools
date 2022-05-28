@@ -175,9 +175,31 @@ jq -S -c -M '' ~/.terra/config/genesis.json | shasum -a 256
 [placeholder]
 ```
 
+7. Clear persistent peers of ~/.terra/config/config.toml
+
+`collect-gentx` cmd will fill `persistent_peers` with wrong addresses which are defined in each gentx's memo.
+
+```sh
+sed -i 's/^persistent_peers = ".*"/persistent_peers = ""/g' ~/.terra/config/config.toml
+```
+
 ## Launch Network
 
-Execute binary and wait until network launch
+1. Install genesis.json
+```sh
+wget [placeholder]
+mv ./genesis.json ~/.terra/config/genesis.json
+```
+
+2. Setup config
+```sh
+$ sed -i 's/minimum-gas-prices = "0uluna"/minimum-gas-prices = "0.15uluna"/g' ~/.terra/config/app.toml
+
+# This will prevent continuous reconnection try. (default P2P_PORT is 26656)
+$ sed -i 's/external_address = ""/external_address = "[YOUR_EXTERNAL_IP_ADDRESS:P2P_PORT]"/g' ~/.terra/config/config.toml
+```
+
+3. Execute binary and wait until network launch
 ```sh
 sudo systemctl start terrad
 ```
