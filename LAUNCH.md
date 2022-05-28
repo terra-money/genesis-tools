@@ -30,6 +30,7 @@ sudo systemctl stop terrad
 ```sh
 git clone https://github.com/terra-money/core-genesis-exporter
 cd core-genesis-exporter
+git checkout ca57f5108c14fb3bbdf5bec20b2c9d5c4dca2555
 make install
 ```
 
@@ -39,7 +40,7 @@ terrad version --long
 name: terra
 server_name: terrad
 version: ""
-commit: 2565577ccf47d1b11a82d77500a0cb880080a70c
+commit: ca57f5108c14fb3bbdf5bec20b2c9d5c4dca2555
 build_tags: netgo,ledger
 go: go version go1.18 darwin/arm64
 ```
