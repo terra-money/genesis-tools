@@ -188,7 +188,7 @@ sed -i 's/^persistent_peers = ".*"/persistent_peers = ""/g' ~/.terra/config/conf
 
 1. Install genesis.json
 ```sh
-wget [placeholder]
+wget https://phoenix-genesis.s3.us-west-1.amazonaws.com/genesis.json
 mv ./genesis.json ~/.terra/config/genesis.json
 ```
 
